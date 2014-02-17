@@ -1,5 +1,6 @@
 require "slackbotsy/version"
+require "slackbotsy/bot"
 
 module Slackbotsy
-  # Your code goes here...
+
 end
