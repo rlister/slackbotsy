@@ -7,7 +7,6 @@ module Slackbotsy
 
   class Bot
 
-    # def initialize(subdomain, token, room_id, &block)
     def initialize(options, &block)
       @options = options
       @regexes = {}
