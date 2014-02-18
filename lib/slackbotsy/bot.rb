@@ -61,8 +61,9 @@ module Slackbotsy
 
       ## format any replies for http response
       if responses
-        text = responses.compact.join('\n')
-        %Q[{"text": "#{text}"}]
+        # text = responses.compact.join('\n')
+        # %Q[{"text": "#{text}"}]
+        { text: responses.compact.join("\n") }.to_json
       end
     end
 
