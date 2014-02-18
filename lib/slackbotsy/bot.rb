@@ -41,6 +41,11 @@ module Slackbotsy
       return nil                # so as not to trigger text in outgoing webhook reply
     end
 
+    def attach(text, attachment, options = {})
+      options = { attachments: [ attachment ] }.merge(options)
+      say(text, options)
+    end
+    
     ## add regex to things to hear
     def hear(regex, &block)
       @regexes[regex] = block
