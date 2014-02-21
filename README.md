@@ -22,7 +22,15 @@ Or install it yourself as:
 require 'slackbotsy'
 require 'sinatra'
 
-Slackbotsy::Bot.new(options) do
+config = {
+  'team'           => 'your_team',
+  'channel'        => '#default',
+  'name'           => 'botsy',
+  'incoming_token' => 'secret',
+  'outgoing_token' => 'secret'
+}
+
+Slackbotsy::Bot.new(config) do
 
   hear /echo\s+(.+)/ do |data, mdata|
     "I heard #{data['user_name']} say '#{mdata[1]}' in #{data['channel_name']}"
