@@ -30,7 +30,7 @@ config = {
   'outgoing_token' => 'secret'
 }
 
-Slackbotsy::Bot.new(config) do
+bot = Slackbotsy::Bot.new(config) do
 
   hear /echo\s+(.+)/ do |data, mdata|
     "I heard #{data['user_name']} say '#{mdata[1]}' in #{data['channel_name']}"
