@@ -7,11 +7,11 @@ module Slackbotsy
 
   class Bot
 
-    def initialize(options, &block)
+    def initialize(options)
       @options = options
       @regexes = {}
       setup_incoming_webhook    # http connection for async replies
-      instance_eval &block if block # eval any hear statements in block
+      yield if block_given?
     end
 
     ## setup http connection for sending async incoming webhook messages to slack
