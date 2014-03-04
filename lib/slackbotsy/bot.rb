@@ -56,18 +56,16 @@ module Slackbotsy
       return nil unless msg[:token] == @options['outgoing_token'] # ensure messages are for us from slack
       return nil if msg[:user_name] == 'slackbot'  # do not reply to self
       return nil unless msg[:text].is_a?(String) # skip empty messages
-
+      
       ## loop things to look for and collect immediate responses
       responses = @regexes.map do |regex, proc|
         if mdata = msg[:text].strip.match(regex)
-          proc.call(msg, mdata)
+          Slackbotsy::Message.new(self, msg).instance_exec(mdata, &proc)
         end
       end
 
       ## format any replies for http response
       if responses
-        # text = responses.compact.join('\n')
-        # %Q[{"text": "#{text}"}]
         { text: responses.compact.join("\n") }.to_json
       end
     end
