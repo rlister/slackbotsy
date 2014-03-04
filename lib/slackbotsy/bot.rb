@@ -11,7 +11,7 @@ module Slackbotsy
       @options = options
       @regexes = {}
       setup_incoming_webhook    # http connection for async replies
-      yield if block_given?
+      yield if block_given?     # run any hear statements in block
     end
 
     ## setup http connection for sending async incoming webhook messages to slack
@@ -45,7 +45,7 @@ module Slackbotsy
       options = { attachments: [ attachment ] }.merge(options)
       say(text, options)
     end
-    
+
     ## add regex to things to hear
     def hear(regex, &block)
       @regexes[regex] = block
@@ -56,7 +56,7 @@ module Slackbotsy
       return nil unless msg[:token] == @options['outgoing_token'] # ensure messages are for us from slack
       return nil if msg[:user_name] == 'slackbot'  # do not reply to self
       return nil unless msg[:text].is_a?(String) # skip empty messages
-      
+
       ## loop things to look for and collect immediate responses
       responses = @regexes.map do |regex, proc|
         if mdata = msg[:text].strip.match(regex)
