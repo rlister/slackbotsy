@@ -58,9 +58,14 @@ module Slackbotsy
       return nil unless msg[:text].is_a?(String) # skip empty messages
 
       ## loop things to look for and collect immediate responses
+      ## rescue everything here so the bot keeps running even with a broken script
       responses = @regexes.map do |regex, proc|
         if mdata = msg[:text].strip.match(regex)
-          Slackbotsy::Message.new(self, msg).instance_exec(mdata, &proc)
+          begin
+            Slackbotsy::Message.new(self, msg).instance_exec(mdata, &proc)
+          rescue => err
+            err
+          end
         end
       end
 
