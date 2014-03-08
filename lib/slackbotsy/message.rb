@@ -1,7 +1,8 @@
 module Slackbotsy
 
   class Message < Hash
-
+    include Helper              # mixin client helper methods
+    
     ## convert message from a Hash obj to a Message obj
     def initialize(caller, msg)
       super()
