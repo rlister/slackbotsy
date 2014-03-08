@@ -51,6 +51,13 @@ module Slackbotsy
       @regexes[regex] = block
     end
 
+    ## pass list of files containing hear statements, to be opened and evaled
+    def eval_scripts(*files)
+      files.flatten.each do |file|
+        self.instance_eval File.open(file).read
+      end
+    end
+    
     ## check message and run blocks for any matches
     def handle_item(msg)
       return nil unless msg[:token] == @options['outgoing_token'] # ensure messages are for us from slack
