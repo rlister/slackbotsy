@@ -2,6 +2,7 @@ require 'net/http'
 require 'net/https'
 require 'uri'
 require 'json'
+require 'set'
 
 module Slackbotsy
 
@@ -9,6 +10,10 @@ module Slackbotsy
 
     def initialize(options)
       @options = options
+
+      ## use set of tokens for (more or less) O(1) lookup on multiple channels
+      @options['outgoing_token'] = Array(@options['outgoing_token']).to_set
+      
       @regexes = {}
       setup_incoming_webhook    # http connection for async replies
       yield if block_given?     # run any hear statements in block
@@ -60,7 +65,7 @@ module Slackbotsy
     
     ## check message and run blocks for any matches
     def handle_item(msg)
-      return nil unless msg[:token] == @options['outgoing_token'] # ensure messages are for us from slack
+      return nil unless @options['outgoing_token'].include? msg[:token] # ensure messages are for us from slack
       return nil if msg[:user_name] == 'slackbot'  # do not reply to self
       return nil unless msg[:text].is_a?(String) # skip empty messages
 
