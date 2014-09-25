@@ -26,28 +26,28 @@ module Slackbotsy
       @http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
 
-    ## format to send text to incoming webhook
-    def encode_payload(text, options = {})
+    ## raw post of hash to slack
+    def post(options)
       payload = {
-        text:     text,
         username: @options['name'],
-        channel:  @options['channel'].gsub(/^#?/, '#'), # ensure channel begins with #
+        channel:  @options['channel']
       }.merge(options)
-
-      "payload=#{payload.to_json.to_s}"
-    end
-
-    ## send text to slack using incoming webhook
-    def say(text, options = {})
+      payload[:channel] = payload[:channel].gsub(/^#?/, '#') #slack api needs leading # on channel
       request = Net::HTTP::Post.new(@uri.request_uri)
-      request.body = encode_payload(text, options)
-      response = @http.request(request)
-      return nil                # so as not to trigger text in outgoing webhook reply
+      request.set_form_data(payload: payload.to_json)
+      @http.request(request)
+      return nil # so as not to trigger text in outgoing webhook reply
     end
 
-    def attach(text, attachment, options = {})
-      options = { attachments: [ attachment ] }.merge(options)
-      say(text, options)
+    ## simple wrapper on post to send text
+    def say(text, options = {})
+      post({ text: text }.merge(options))
+    end
+
+    ## simple wrapper on post to send attachment(s)
+    def attach(ary, options = {})
+      attachments = ary.is_a?(Array) ? ary : [ ary ] #force first arg to array
+      post({ attachments: attachments }.merge(options))
     end
 
     ## add regex to things to hear
