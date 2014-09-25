@@ -2,7 +2,7 @@ module Slackbotsy
 
   class Message < Hash
     include Helper              # mixin client helper methods
-    
+
     ## convert message from a Hash obj to a Message obj
     def initialize(caller, msg)
       super()
@@ -10,10 +10,20 @@ module Slackbotsy
       @caller = caller          # bot object
     end
 
-    ## call say without bot object
+    ## convenience wrapper in message scope, so we can call it without @caller
+    ## and set default channel to same as received message
+    def post(options)
+      @caller.post({ channel: self['channel_name'] }.merge(options))
+    end
+
+    ## ditto
     def say(text, options = {})
-      options[:channel] ||= self['channel_name'] # default to same channel as msg
-      @caller.say(text, options)
+      @caller.say(text, { channel: self['channel_name'] }.merge(options))
+    end
+
+    ## ditto
+    def attach(attachments, options = {})
+      @caller.attach(attachments, { channel: self['channel_name'] }.merge(options))
     end
 
     ## convenience getter methods for message properties
@@ -22,7 +32,7 @@ module Slackbotsy
         self.fetch(method, nil)
       end
     end
-    
+
   end
 
 end
