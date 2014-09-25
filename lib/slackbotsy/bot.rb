@@ -13,7 +13,6 @@ module Slackbotsy
 
       ## use set of tokens for (more or less) O(1) lookup on multiple channels
       @options['outgoing_token'] = Array(@options['outgoing_token']).to_set
-      
       @regexes = {}
       setup_incoming_webhook    # http connection for async replies
       yield if block_given?     # run any hear statements in block
@@ -62,7 +61,7 @@ module Slackbotsy
         self.instance_eval File.open(file).read
       end
     end
-    
+
     ## check message and run blocks for any matches
     def handle_item(msg)
       return nil unless @options['outgoing_token'].include? msg[:token] # ensure messages are for us from slack
