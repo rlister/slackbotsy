@@ -2,18 +2,20 @@ require 'net/http'
 require 'net/https'
 require 'uri'
 require 'json'
-require 'set'
+# require 'set'
 
 module Slackbotsy
 
   class Bot
+
+    attr_accessor :listeners, :last_description
 
     def initialize(options)
       @options = options
 
       ## use set of tokens for (more or less) O(1) lookup on multiple channels
       @options['outgoing_token'] = Array(@options['outgoing_token']).to_set
-      @regexes = {}
+      @listeners = []
       setup_incoming_webhook    # http connection for async replies
       yield if block_given?     # run any hear statements in block
     end
@@ -50,9 +52,15 @@ module Slackbotsy
       post({ attachments: attachments }.merge(options))
     end
 
+    ## record a description of the next hear block, for use in help
+    def desc(command, description = nil)
+      @last_desc = [ command, description ]
+    end
+
     ## add regex to things to hear
     def hear(regex, &block)
-      @regexes[regex] = block
+      @listeners << OpenStruct.new(regex: regex, desc: @last_desc, proc: block)
+      @last_desc = nil
     end
 
     ## pass list of files containing hear statements, to be opened and evaled
@@ -70,10 +78,10 @@ module Slackbotsy
 
       ## loop things to look for and collect immediate responses
       ## rescue everything here so the bot keeps running even with a broken script
-      responses = @regexes.map do |regex, proc|
-        if mdata = msg[:text].strip.match(regex)
+      responses = @listeners.map do |hear|
+        if mdata = msg[:text].strip.match(hear.regex)
           begin
-            Slackbotsy::Message.new(self, msg).instance_exec(mdata, &proc)
+            Slackbotsy::Message.new(self, msg).instance_exec(mdata, &hear.proc)
           rescue => err
             err
           end
