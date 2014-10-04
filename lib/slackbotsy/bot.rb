@@ -10,14 +10,14 @@ module Slackbotsy
 
     attr_accessor :listeners, :last_description
 
-    def initialize(options)
+    def initialize(options, &block)
       @options = options
 
       ## use set of tokens for (more or less) O(1) lookup on multiple channels
       @options['outgoing_token'] = Array(@options['outgoing_token']).to_set
       @listeners = []
-      setup_incoming_webhook    # http connection for async replies
-      yield if block_given?     # run any hear statements in block
+      setup_incoming_webhook                # http connection for async replies
+      instance_eval(&block) if block_given? # run any hear statements in block
     end
 
     ## setup http connection for sending async incoming webhook messages to slack
