@@ -21,6 +21,7 @@ Or install it yourself as:
 ```ruby
 require 'slackbotsy'
 require 'sinatra'
+require 'open-uri'
 
 config = {
   'team'           => 'your_team',
