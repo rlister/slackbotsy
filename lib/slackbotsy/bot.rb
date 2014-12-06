@@ -22,7 +22,9 @@ module Slackbotsy
 
     ## setup http connection for sending async incoming webhook messages to slack
     def setup_incoming_webhook
-      @uri  = URI.parse "https://#{@options['team']}.slack.com/services/hooks/incoming-webhook?token=#{@options['incoming_token']}"
+      ## incoming_webhook will be used if provided, otherwise fallback to old-style url with team and token
+      url = @options.fetch('incoming_webhook', false) || "https://#{@options['team']}.slack.com/services/hooks/incoming-webhook?token=#{@options['incoming_token']}"
+      @uri  = URI.parse(url)
       @http = Net::HTTP.new(@uri.host, @uri.port)
       @http.use_ssl = true
       @http.verify_mode = OpenSSL::SSL::VERIFY_PEER

@@ -24,11 +24,10 @@ require 'sinatra'
 require 'open-uri'
 
 config = {
-  'team'           => 'your_team',
-  'channel'        => '#default',
-  'name'           => 'botsy',
-  'incoming_token' => 'secret',
-  'outgoing_token' => 'secret'
+  'channel'          => '#default',
+  'name'             => 'botsy',
+  'incoming_webhook' => 'https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX',
+  'outgoing_token'   => 'secret'
 }
 
 bot = Slackbotsy::Bot.new(config) do
