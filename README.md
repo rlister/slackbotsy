@@ -22,6 +22,16 @@ Or install it yourself as:
 gem install slackbotsy
 ```
 
+## Setup
+
+botsy requires (at least) two webhooks setup in slack:
+
+* outgoing webhook: for slack to send messages out to botsy
+* incoming webhook: for botsy `say` and `attach` methods to respond
+
+Set these up at https://your_team.slack.com/services/new and copy
+the webhook urls/tokens to botsy's config as below.
+
 ## Example usage
 
 ```ruby
