@@ -6,15 +6,21 @@ Ruby bot for Slack chat, inspired by http://github.com/seejohnrun/botsy.
 
 Add this line to your application's Gemfile:
 
-    gem 'slackbotsy'
+```ruby
+gem 'slackbotsy'
+```
 
-And then execute:
+And then bundle:
 
-    $ bundle
+```sh
+bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install slackbotsy
+```sh
+gem install slackbotsy
+```
 
 ## Example usage
 
