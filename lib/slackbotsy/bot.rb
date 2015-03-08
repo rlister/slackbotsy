@@ -12,12 +12,15 @@ module Slackbotsy
 
     def initialize(options, &block)
       @options = options
-
-      ## use set of tokens for (more or less) O(1) lookup on multiple channels
-      @options['outgoing_token'] = Array(@options['outgoing_token']).to_set
       @listeners = []
+      @options['outgoing_token'] = parse_outgoing_tokens(@options['outgoing_token'])
       setup_incoming_webhook                # http connection for async replies
       instance_eval(&block) if block_given? # run any hear statements in block
+    end
+
+    ## use set of tokens for (more or less) O(1) lookup on multiple channels
+    def parse_outgoing_tokens(tokens)
+      (tokens.respond_to?(:split) ? tokens.split(/[,\s]+/) : Array(tokens)).to_set
     end
 
     ## setup http connection for sending async incoming webhook messages to slack
