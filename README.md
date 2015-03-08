@@ -1,6 +1,18 @@
 # Slackbotsy
 
-Ruby bot for Slack chat, inspired by http://github.com/seejohnrun/botsy.
+Ruby bot library for Slack chat, inspired by
+the Campfire bot http://github.com/seejohnrun/botsy.
+
+## Working example
+
+This repo and gem provide a library for implementing slack botsy using
+the web framework of your choice. For example, botsy could be embedded
+into an existing Rails app to provide access to a database from slack.
+
+For a fully-implemented and ready-to-deploy standalone bot, using
+slackbotsy and sinatra, please proceed over to
+https://github.com/rlister/slackbotsy_example. You will find full
+instructions to configure and deploy your own bot.
 
 ## Installation
 
