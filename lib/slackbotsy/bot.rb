@@ -7,14 +7,14 @@ require 'set'
 module Slackbotsy
 
   class Bot
-
-    attr_accessor :listeners, :last_description
+    attr_accessor :listeners, :last_description, :api
 
     def initialize(options, &block)
       @options = options
       @listeners = []
       @options['outgoing_token'] = parse_outgoing_tokens(@options['outgoing_token'])
       setup_incoming_webhook                # http connection for async replies
+      setup_web_api                         # setup slack Web API
       instance_eval(&block) if block_given? # run any hear statements in block
     end
 
@@ -33,7 +33,14 @@ module Slackbotsy
       @http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     end
 
-    ## raw post of hash to slack
+    ## use api_token to setup Web API authentication
+    def setup_web_api
+      if @options['api_token']
+        @api = Api.new(@options['api_token'])
+      end
+    end
+
+    ## raw post of hash to slack webhook
     def post(options)
       payload = {
         username: @options['name'],
