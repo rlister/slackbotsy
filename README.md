@@ -76,3 +76,35 @@ post '/' do
   bot.handle_item(params)
 end
 ```
+
+## Web API
+
+slackbotsy can now post to Slack using the
+[Slack Web API](https://api.slack.com/web). It may be used alongside
+the incoming webhooks to post.
+
+Create a Slack user in your team for your bot, then create an api
+token for that user at https://api.slack.com/web, and set the config
+variable `api_token` when you configure botsy. Then you may use the
+`post_message` or `upload` convenience methods to post simple messages
+or upload files/text-snippets.
+
+```ruby
+config = {
+  'channel'   => '#default',
+  'name'      => 'botsy',
+  'api_token' => 'xoxp-0123456789-0123456789-0123456789-d34db33f'
+}
+
+bot = Slackbotsy::Bot.new(config) do
+
+  hear /ping/ do
+    post_message 'this is a simple posted message', channel: '#general'
+  end
+
+  hear /upload/ do
+    upload(file: File.new('/tmp/kitten.jpg'), channel: '#general')
+  end
+
+end
+```
