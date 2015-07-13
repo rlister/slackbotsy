@@ -76,6 +76,18 @@ module Slackbotsy
       @api.join(payload[:channel])
       @api.post_message(payload)
     end
+
+    ## simple wrapper on api.upload (which calls files.upload)
+    ## pass 'channel' as a csv list of channel names, otherwise same args as files.upload
+    def upload(options)
+      payload = options
+      channels = @api.channels # list of channel objects
+      payload[:channels] ||= (options.fetch(:channel, @options['channel'])).split(/[\s,]+/).map do |name|
+        channels.find { |c| name.match(/^#?#{c['name']}$/) }.fetch('id') # convert channel id to name
+      end.join(',')
+      @api.upload(payload)
+    end
+
     ## record a description of the next hear block, for use in help
     def desc(command, description = nil)
       @last_desc = [ command, description ]
