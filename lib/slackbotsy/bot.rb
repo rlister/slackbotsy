@@ -64,6 +64,18 @@ module Slackbotsy
       post({ attachments: attachments }.merge(options))
     end
 
+    ## simple wrapper on api.post_message (which calls chat.postMessage)
+    def post_message(text, options = {})
+      payload = {
+        username: @options['name'],
+        channel:  @options['channel'],
+        text:     text,
+        as_user:  true
+      }.merge(options)
+      payload[:channel] = payload[:channel].gsub(/^#?/, '#') # chat.postMessage needs leading # on channel
+      @api.join(payload[:channel])
+      @api.post_message(payload)
+    end
     ## record a description of the next hear block, for use in help
     def desc(command, description = nil)
       @last_desc = [ command, description ]
