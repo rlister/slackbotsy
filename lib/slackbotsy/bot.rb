@@ -75,6 +75,7 @@ module Slackbotsy
       payload[:channel] = payload[:channel].gsub(/^#?/, '#') # chat.postMessage needs leading # on channel
       @api.join(payload[:channel])
       @api.post_message(payload)
+      return nil # be quiet in webhook reply
     end
 
     ## simple wrapper on api.upload (which calls files.upload)
@@ -86,6 +87,7 @@ module Slackbotsy
         channels.find { |c| name.match(/^#?#{c['name']}$/) }.fetch('id') # convert channel id to name
       end.join(',')
       @api.upload(payload)
+      return nil # be quiet in webhook reply
     end
 
     ## record a description of the next hear block, for use in help
