@@ -8,6 +8,7 @@ module Slackbotsy
       super()
       self.update(msg)
       @caller = caller          # bot object
+      @bot    = caller          # alias for bot object
     end
 
     ## convenience wrapper in message scope, so we can call it without @caller
