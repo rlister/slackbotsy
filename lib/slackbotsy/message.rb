@@ -17,14 +17,20 @@ module Slackbotsy
       @caller.post({ channel: self['channel_name'] }.merge(options))
     end
 
-    ## ditto
     def say(text, options = {})
       @caller.say(text, { channel: self['channel_name'] }.merge(options))
     end
 
-    ## ditto
     def attach(attachments, options = {})
       @caller.attach(attachments, { channel: self['channel_name'] }.merge(options))
+    end
+
+    def post_message(text, options = {})
+      @caller.post_message(text, { channel: self['channel_name'] }.merge(options))
+    end
+
+    def upload(options = {})
+      @caller.upload({ channel: self['channel_name'] }.merge(options))
     end
 
     ## convenience getter methods for message properties
