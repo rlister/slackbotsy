@@ -20,7 +20,12 @@ module Slackbotsy
 
     ## use set of tokens for (more or less) O(1) lookup on multiple channels
     def parse_outgoing_tokens(tokens)
-      (tokens.respond_to?(:split) ? tokens.split(/[,\s]+/) : Array(tokens)).to_set
+      case tokens
+      when String
+        tokens.split(/[,\s]+/)
+      when Array
+        tokens
+      end.to_set
     end
 
     ## setup http connection for sending async incoming webhook messages to slack
