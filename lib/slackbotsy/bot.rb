@@ -128,7 +128,7 @@ module Slackbotsy
 
     ## alias for backward compatibility
     def handle_item(msg)
-      handle_outgoing_webook(msg)
+      handle_outgoing_webhook(msg)
     end
 
     def handle_slash_command(msg)
