@@ -60,8 +60,8 @@ config = {
 
 bot = Slackbotsy::Bot.new(config) do
 
-  hear /echo\s+(.+)/ do |data, mdata|
-    "I heard #{data['user_name']} say '#{mdata[1]}' in #{data['channel_name']}"
+  hear /echo\s+(.+)/ do |mdata|
+    "I heard #{user_name} say '#{mdata[1]}' in #{channel_name}"
   end
 
   hear /flip out/i do
