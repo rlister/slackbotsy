@@ -114,8 +114,8 @@ module Slackbotsy
     end
 
     ## check message and run blocks for any matches
-    def handle_item(msg)
-      return nil unless @options['outgoing_token'].include? msg[:token] # ensure messages are for us from slack
+    def handle_outgoing_webhook(msg)
+      return nil unless @options['outgoing_token'].include?(msg[:token]) # ensure messages are for us from slack
       return nil if msg[:user_name] == 'slackbot'  # do not reply to self
       return nil unless msg[:text].is_a?(String) # skip empty messages
 
