@@ -109,7 +109,7 @@ module Slackbotsy
     ## pass list of files containing hear statements, to be opened and evaled
     def eval_scripts(*files)
       files.flatten.each do |file|
-        self.instance_eval File.open(file).read
+        self.instance_eval(File.open(file).read)
       end
     end
 
