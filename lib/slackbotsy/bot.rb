@@ -119,13 +119,15 @@ module Slackbotsy
       return nil if msg[:user_name] == 'slackbot'  # do not reply to self
       return nil unless msg[:text].is_a?(String) # skip empty messages
 
-      ## loop things to look for and collect immediate responses
-      ## rescue everything here so the bot keeps running even with a broken script
-      responses = @listeners.map do |hear|
-        if mdata = msg[:text].strip.match(hear.regex)
+      responses = get_responses(msg, msg[:text].strip)
+    ## run on msg all hear blocks matching text
+    def get_responses(msg, text)
+      message = Slackbotsy::Message.new(self, msg)
+      @listeners.map do |listener|
+        text.match(listener.regex) do |mdata|
           begin
-            Slackbotsy::Message.new(self, msg).instance_exec(mdata, &hear.proc)
-          rescue => err
+            message.instance_exec(mdata, &listener.proc)
+          rescue => err # keep running even with a broken script, but report the error
             err
           end
         end
