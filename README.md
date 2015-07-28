@@ -36,13 +36,61 @@ gem install slackbotsy
 
 ## Setup
 
-botsy requires (at least) two webhooks setup in slack:
+botsy requires some or all of the following integrations setup in slack:
 
-* outgoing webhook: for slack to send messages out to botsy
+* outgoing webhook: for slack to send free-format messages out to botsy
+* slash command: for slack to send messages prefixed with a slash
+  command, for example `/botsy`
 * incoming webhook: for botsy `say` and `attach` methods to respond
 
 Set these up at https://your_team.slack.com/services/new and copy
 the webhook urls/tokens to botsy's config as below.
+
+## Sending messages to botsy
+
+You have three choices of how to send messages to botsy. It is fine to
+mix and match these to listen to different kinds of messages.
+
+### Global outgoing webhook
+
+This sends all messages from all channels to botsy, but requires a
+trigger word (e.g. `botsy`). This word must be included in
+`hear`-block regexes. The return from the hear block is posted
+publically to the sending channel. Alternatively, return `nil` and use
+`say` or `attach` to craft an asynchronous response.
+
+Requires you to set the `outgoing_token` config variable.
+
+### Per-channel outgoing webhooks
+
+These do not require any trigger word or magic prefix, but you must
+setup a webhook for every channel in which you want botsy to
+respond. This is useful to give your botsy a little personality, by
+seeming to respond to users' comments without being prompted.
+
+As with global webhooks, `hear` block returns public responses, or use
+`say` or `attach`.
+
+Add all required channel tokens to the `outgoing_token` array.
+
+### Slash commands
+
+You can define one or more slash integrations that send any messages
+with a slash trigger prefix (for example `/botsy`). A major advantage
+is that messages can be triggered from all channels, groups and
+private chats.
+
+The return value of the `hear`-block is sent as a _private_ response
+to the user (like communication from the built-in `slackbot`). This
+can be useful for requesting verbose bot information without spamming
+channels. To respond _publically_ from a `hear`-block, post direct to
+the channel using `say` or `attach`.
+
+The slash trigger itself is used in the `hear`-block regex match, so
+you may setup as many slash integrations as you like with different
+triggers, and respond appropriately.
+
+Add all slash integration tokens to config `slash_token`.
 
 ## Example usage
 
