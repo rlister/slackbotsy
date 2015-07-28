@@ -92,6 +92,44 @@ triggers, and respond appropriately.
 
 Add all slash integration tokens to config `slash_token`.
 
+## Sending messages to slack
+
+There are four methods of sending data to slack in response to
+matching a `hear` block. These may be mixed as necessary.
+
+### Simple response in return
+
+The return value from a `hear`-block is returned to slack in the http
+response to the sent message. This is a lightweight synchronous
+response to the same channel, and is sufficient for many needs.
+
+Note: responses to outgoing webhooks are posted publically, responses
+to slash commands are private to the requesting user (and appear to
+come from `slackbot`).
+
+### Post simple text to an incoming webhook with `say()`
+
+Asynchronous plain-text responses may be sent with the `say()` method
+from inside a `hear`-block. This is useful for multiple replies or to
+pass extra arguments, such as `channel`, to post response to a
+specific channel. It is also useful when botsy is expanded to be a
+general API for slack integration with third-party applications.
+
+Set the value of the `incoming_webhook` config variable to the URL
+given in your slack Incoming Webhook integration.
+
+### Post attachments to an incoming webook with `attach()`
+
+Works exactly like `say()`, except you may post JSON containing
+complex attachment information.
+
+### Upload data directly to slack using the API
+
+Call `post_message()` to get full access to the Slack Web API
+`/chat.postMessage` call. Argument is a hash containing the same
+variables described in the Web API docs. This allows uploading of text
+snippets and binary data.
+
 ## Example usage
 
 ```ruby
