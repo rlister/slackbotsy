@@ -120,6 +120,22 @@ module Slackbotsy
       return nil unless msg[:text].is_a?(String) # skip empty messages
 
       responses = get_responses(msg, msg[:text].strip)
+
+      if responses
+        { text: responses.compact.join("\n") }.to_json # webhook responses are json
+      end
+    end
+
+    def handle_slash_command(msg)
+      return nil unless @options['slash_token'].include?(msg[:token])
+
+      responses = get_responses(msg, "#{msg[:command]} #{msg[:text]}".strip)
+
+      if responses
+        responses.join("\n") # plain text responses
+      end
+    end
+
     ## run on msg all hear blocks matching text
     def get_responses(msg, text)
       message = Slackbotsy::Message.new(self, msg)
@@ -131,11 +147,6 @@ module Slackbotsy
             err
           end
         end
-      end
-
-      ## format any replies for http response
-      if responses
-        { text: responses.compact.join("\n") }.to_json
       end
     end
 
