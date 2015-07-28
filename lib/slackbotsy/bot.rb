@@ -126,6 +126,11 @@ module Slackbotsy
       end
     end
 
+    ## alias for backward compatibility
+    def handle_item(msg)
+      handle_outgoing_webook(msg)
+    end
+
     def handle_slash_command(msg)
       return nil unless @options['slash_token'].include?(msg[:token])
 
