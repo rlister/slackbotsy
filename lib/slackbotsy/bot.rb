@@ -77,8 +77,12 @@ module Slackbotsy
         text:     text,
         as_user:  true
       }.merge(options)
-      payload[:channel] = payload[:channel].gsub(/^#?/, '#') # chat.postMessage needs leading # on channel
-      @api.join(payload[:channel])
+
+      unless direct_message?(payload[:channel])
+        payload[:channel] = enforce_leading_hash(payload[:channel])
+        @api.join(payload[:channel])
+      end
+
       @api.post_message(payload)
       return nil # be quiet in webhook reply
     end
@@ -93,6 +97,11 @@ module Slackbotsy
       end.join(',')
       @api.upload(payload)
       return nil # be quiet in webhook reply
+    end
+
+    ## simple wrapper on api.users (which calls users.list)
+    def users
+      @api.users
     end
 
     ## record a description of the next hear block, for use in help
@@ -155,6 +164,16 @@ module Slackbotsy
       end
     end
 
+    private
+
+    def enforce_leading_hash(channel)
+      # chat.postMessage needs leading # on channel
+      channel.gsub(/^#?/, '#')
+    end
+
+    def direct_message?(channel)
+      channel.start_with?('@')
+    end
   end
 
 end
