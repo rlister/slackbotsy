@@ -21,6 +21,8 @@ module Slackbotsy
     ## use set of tokens for (more or less) O(1) lookup on multiple channels
     def parse_outgoing_tokens(tokens)
       case tokens
+      when NilClass
+        []
       when String
         tokens.split(/[,\s]+/)
       when Array
