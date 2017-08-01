@@ -146,8 +146,14 @@ config = {
 
 bot = Slackbotsy::Bot.new(config) do
 
-  hear /echo\s+(.+)/ do |mdata|
+  # first arg is MatchData for the regex
+  hear /echo (.+)/ do |mdata|
     "I heard #{user_name} say '#{mdata[1]}' in #{channel_name}"
+  end
+
+  # optional subsequent args will contain any captures
+  hear /test (\w+) (\w+)/ do |_, foo, bar|
+    "I got #{foo} and #{bar}"
   end
 
   hear /flip out/i do
